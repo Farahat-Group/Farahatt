@@ -63,12 +63,12 @@ class AuthController extends Controller
                 }
             }
 
-            if ($request->hasFile('image')){
-                array_pop($exception );
+            if($request->hasFile('image')){
                 $image = $request->file('image');
+
                 $new_name = time() . $image->getClientOriginalName();
                 $image->move(public_path('/images/employee/profile'), $new_name);
-                $request->image = $new_name;
+                $customer->update(['image' => $new_name]);
             }
             $customer->update($request->except($exception));
             return $this->responseJsonWithoutData(200 , 'Profile Updated');

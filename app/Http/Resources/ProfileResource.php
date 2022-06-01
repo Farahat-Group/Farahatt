@@ -12,7 +12,7 @@ class ProfileResource extends JsonResource
         return [
             'name' => $this->name,
             'email' => $this->email,
-            'image' => $this->image ?? "No Image",
+            'image' => $this->image ? "/images/employee/profile/" . $this->image : "No Image",
             'address' => $this->address ?? "Not Set",
             'phone' => $this->phone_number ?? "Not Set",
             'lat' => $this->lat ?? "Not Set",

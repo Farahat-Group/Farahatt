@@ -9,16 +9,18 @@ use App\Models\Category;
 use App\Models\Service;
 use App\Traits\ApiTraits;
 use Illuminate\Http\JsonResponse;
-use Illuminate\Http\Request;
+use Illuminate\Support\Collection;
 
 class ServicesController extends Controller
 {
     use ApiTraits;
+
+    private Collection $services;
     public function index(): JsonResponse{
-        $services = Service::filter();
-        if (count($services) == 0)
+        $this->services = Service::filter();
+        if (count($this->services) == 0)
             return $this->responseJsonWithoutData(200 , 'No Services Found!');
-        return $this->responseJson(200 , 'Services Returned' , ServiceResource::collection($services));
+        return $this->responseJson(200 , 'Services Returned' , ServiceResource::collection($this->services));
     }
 
     public function show($id): JsonResponse{
@@ -28,10 +30,18 @@ class ServicesController extends Controller
         return $this->responseJson(200 , 'Service Returned' , (new ServiceResource($service)));
     }
 
+
     public function bestsellers() {
-        $services = Service::query()->orderBy('sales' , 'desc')->take(10)->get();
-        if (count($services) == 0)
+        $this->services = Service::query()->orderBy('sales' , 'desc')->take(10)->get();
+        if (count($this->services) == 0)
             return $this->responseJsonWithoutData(200 , 'No Services Found!');
-        return $this->responseJson(200 , 'Services Returned' , ServiceResource::collection($services));
+        return $this->responseJson(200 , 'Services Returned' , ServiceResource::collection($this->services));
+    }
+
+    public function newServices(){
+        $this->services = Service::query()->latest()->get();
+        if (count($this->services) == 0)
+            return $this->responseJsonWithoutData(200 , 'No Services Found!');
+        return $this->responseJson(200 , 'Services Returned' , ServiceResource::collection($this->services));
     }
 }
