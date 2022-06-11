@@ -1,8 +1,10 @@
 <?php
 
 use App\Http\Controllers\Api\Auth\AuthController;
+use App\Http\Controllers\Api\CartController;
 use App\Http\Controllers\Api\CategoryController;
 use App\Http\Controllers\Api\CouponController;
+use App\Http\Controllers\Api\OrderController;
 use App\Http\Controllers\Api\RatingsController;
 use App\Http\Controllers\Api\ServicesController;
 use Illuminate\Support\Facades\Route;
@@ -20,21 +22,24 @@ Route::controller(AuthController::class)->group(function () {
 //Auth Routes
 
 
+Route::controller(ServicesController::class)->group(function () {
+    Route::get('services' , 'index');
+    Route::get('services/{id}' , 'show');
+    Route::get('bestsellers' , 'bestsellers');
+    Route::get('new-services' , 'newServices');
+});
+
+Route::controller(CategoryController::class)->group(function () {
+    Route::get('categories' , 'index');
+    Route::get('categories/{id}' , 'show');
+    Route::get('categories/{category}/services' , 'services');
+});
 
 
+
+
+// Authentication Needed Routes
 Route::middleware('auth:api')->group(function () {
-    Route::controller(CategoryController::class)->group(function () {
-        Route::get('categories' , 'index');
-        Route::get('categories/{id}' , 'show');
-        Route::get('categories/{category}/services' , 'services');
-    });
-
-    Route::controller(ServicesController::class)->group(function () {
-        Route::get('services' , 'index');
-        Route::get('services/{id}' , 'show');
-        Route::get('bestsellers' , 'bestsellers');
-        Route::get('new-services' , 'newServices');
-    });
 
     Route::controller(RatingsController::class)->group(function () {
         Route::post('service/{service}/rating' , 'store');
@@ -43,5 +48,18 @@ Route::middleware('auth:api')->group(function () {
 
     Route::controller(CouponController::class)->group(function () {
         Route::post('coupon' , 'submit');
+    });
+
+    Route::controller(CartController::class)->group(function () {
+        Route::post('cart/{id}' , 'addToCart');
+        Route::get('cart' , 'index');
+        Route::patch('cart/decrease-quantity/{id}' , 'decrease');
+        Route::delete('cart' , 'destroy');
+    });
+    Route::controller(OrderController::class)->group(function () {
+       Route::get('orders' , 'index');
+       Route::post('orders' , 'store');
+       Route::get('orders/{order}' , 'show');
+
     });
 });

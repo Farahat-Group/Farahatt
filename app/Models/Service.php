@@ -27,4 +27,9 @@ class Service extends Model
         }
         return $service->get();
     }
+
+    public function getpriceAfterSaleAttribute() {
+        $percent = $this->price / 100;
+        return $this->price - ($percent * $this->sale);
+    }
 }
