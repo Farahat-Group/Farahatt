@@ -4,6 +4,7 @@ namespace App\Services\Order;
 
 use App\Http\Controllers\Api\CouponController;
 use App\Models\Cart;
+use App\Models\Notification;
 use App\Models\Order;
 use App\Services\Cart\CartServices;
 use App\Services\coupon\CouponServices;
@@ -21,17 +22,18 @@ class OrderHandler
 
     public function __construct()
     {
-        $this->cart = Cart::where('customer_id' , Auth::user()->id)->first() ?? null;
+        $this->cart = Cart::where('customer_id', Auth::user()->id)->first() ?? null;
         $this->cash = $this->getCash();
         $this->customer = Auth::user()->id;
-
     }
 
-    public function getCash(){
+    public function getCash()
+    {
         return CartServices::getCartTotalCash();
     }
 
-    public function createOrder() {
+    public function createOrder()
+    {
 
         $payment = 'cash';
         $code = null;
@@ -40,15 +42,15 @@ class OrderHandler
         $cash = $this->cash;
         $finalCash = $cash;
         $sale = 0;
-        if (request()->has('coupon')){
+        if (request()->has('coupon')) {
             $sale = CouponServices::handle();
-            if ($sale != 0){
+            if ($sale != 0) {
                 $percent = $cash / 100;
                 $finalCash =  $cash - ($percent * $sale);
             }
         }
 
-        if (request('payment_method') == 'vodafone_cash'){
+        if (request('payment_method') == 'vodafone_cash') {
             $payment = 'vodafone_cash';
             $code = request('payment_code');
         }
@@ -63,16 +65,18 @@ class OrderHandler
             'payment_code' => $code,
             'created_at' => Carbon::now()
         ]);
-        foreach ($this->cart->services as $service){
+
+        $notificaion = Notification::create([
+            'customer_id' => Auth()->user()->id,
+            'message' => 'Your Order Have Been Placed And Will Be Checked',
+            'price' => $finalCash
+        ]);
+        foreach ($this->cart->services as $service) {
             DB::table('orders_services')->insert([
                 'quantity' => $service['quantity'],
                 'service_id' => $service['service_id'],
                 'order_id' => $order['id']
             ]);
-
         }
-
-
     }
-
 }

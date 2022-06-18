@@ -25,7 +25,6 @@ class OrderController extends Controller
 
     public function show(Order $order){
         return $this->responseJson(200 , 'Order Products Returned' ,
-
                 [
                     'details' => (new OrdersResource($order)),
                     'services' => OrderProductsResource::collection($order->services),

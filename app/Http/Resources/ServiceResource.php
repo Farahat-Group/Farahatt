@@ -18,13 +18,15 @@ class ServiceResource extends JsonResource
         $this->ratingAvg = ServiceRatingHandler::calculateAvgRating($this);
 
         return [
+            'id' => $this->id,
             'title' => $this->title,
             'description' => $this->description,
             'image' => $this->images ?? "No Images",
-            'price' =>$this->price . '$',
-            'sale' => $this->sale == 0 ? "No Sale" : $this->sale,
-            'rating' => $this->ratingAvg ?? "No Rating Yet",
-            'category' => $this->category->get(['id' , 'title']),
+            'price' =>(double)$this->price,
+            'sale' => (double)$this->sale,
+            'rating' =>(double) $this->ratingAvg,
+            'service_code' => $this->service_code,
+            'category' =>  (new CategoryResource($this->category)),
         ];
     }
 }
