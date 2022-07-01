@@ -9,14 +9,23 @@ use Illuminate\Database\Eloquent\Model;
 class Service extends Model
 {
     use HasFactory;
+    protected $guarded = [];
 
 
     public function category() {
         return $this->belongsTo(Category::class, 'category_id');
     }
 
+    public function extraServices() {
+        return $this->hasMany(ExtraService::class , 'service_id');
+    }
+
     public function rating() {
         return $this->hasMany(Rating::class , 'service_id')->get('rating');
+    }
+
+    public function images() {
+        return $this->hasMany(ServiceImages::class , 'service_id');
     }
 
 
@@ -29,7 +38,7 @@ class Service extends Model
     }
 
     public function getpriceAfterSaleAttribute() {
-        $percent = $this->price / 100;
-        return $this->price - ($percent * $this->sale);
+
+        return ($this->price - $this->sale);
     }
 }

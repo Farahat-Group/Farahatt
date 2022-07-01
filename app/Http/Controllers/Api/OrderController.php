@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
+use App\Http\Resources\OrderExtraSerivesResource;
 use App\Http\Resources\OrderProductsResource;
 use App\Http\Resources\OrdersResource;
 use App\Models\Cart;
@@ -28,6 +29,7 @@ class OrderController extends Controller
                 [
                     'details' => (new OrdersResource($order)),
                     'services' => OrderProductsResource::collection($order->services),
+                    //'extra_services' => OrderExtraSerivesResource::collection($order->extraServices)
                 ]
             );
     }
@@ -36,9 +38,13 @@ class OrderController extends Controller
         $cart = Cart::where('customer_id' , Auth::user()->id)->first();
         if(!$cart)
             return $this->responseJsonFailed(422 , 'Cart Empty');
-        (new OrderHandler())->createOrder();
-        Cart::where('customer_id' , Auth::user()->id)->delete();
-        return $this->responseJsonWithoutData(200 , 'Order Placed And We Send You An Email With Details !');
+        $order = (new OrderHandler())->createOrder();
+        if (!$order)
+            return $this->responseJsonFailed(422 , 'Expired Coupon Order Failed');
+
+            Cart::where('customer_id' , Auth::user()->id)->delete();
+            return $this->responseJsonWithoutData(200 , 'Order Placed And We Send You An Email With Details !');
+
 
     }
 }

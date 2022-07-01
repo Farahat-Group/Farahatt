@@ -2,6 +2,7 @@
 
 namespace App\Services\Order;
 
+use App\Events\OrderPlaced;
 use App\Http\Controllers\Api\CouponController;
 use App\Models\Cart;
 use App\Models\Notification;
@@ -23,60 +24,54 @@ class OrderHandler
     public function __construct()
     {
         $this->cart = Cart::where('customer_id', Auth::user()->id)->first() ?? null;
-        $this->cash = $this->getCash();
         $this->customer = Auth::user()->id;
     }
-
-    public function getCash()
-    {
-        return CartServices::getCartTotalCash();
-    }
-
     public function createOrder()
     {
 
-        $payment = 'cash';
         $code = null;
+        $coupon = null;
         if (!$this->cart)
             return "cart Empty";
-        $cash = $this->cash;
+        $cash = CartServices::getCartTotalCash();
         $finalCash = $cash;
         $sale = 0;
         if (request()->has('coupon')) {
+            $coupon = request('coupon');
             $sale = CouponServices::handle();
             if ($sale != 0) {
-                $percent = $cash / 100;
-                $finalCash =  $cash - ($percent * $sale);
+                $finalCash =  $cash - $sale;
+            } else {
+                return false;
             }
         }
+        $extra =  CartServices::getExtrasCash();
 
-        if (request('payment_method') == 'vodafone_cash') {
-            $payment = 'vodafone_cash';
+        if (request('payment_method') == 0) {
             $code = request('payment_code');
         }
 
         $order = Order::create([
             'cash' => $cash,
             'customer_id' => $this->customer,
-            'status' => 'in progress',
+            'status' => '0',
+            'extras' =>  $extra,
             'sale' => $sale,
-            'final_cash' => $finalCash,
-            'payment_method' => $payment,
+            'final_cash' => ($cash + $extra) - $sale,
+            'payment_method' => request('payment_method'),
             'payment_code' => $code,
-            'created_at' => Carbon::now()
+            'coupon' => $coupon,
         ]);
-
-        $notificaion = Notification::create([
-            'customer_id' => Auth()->user()->id,
-            'message' => 'Your Order Have Been Placed And Will Be Checked',
-            'price' => $finalCash
-        ]);
-        foreach ($this->cart->services as $service) {
+        //event(new OrderPlaced($order));
+        foreach ($this->cart->allServices as $service) {
             DB::table('orders_services')->insert([
                 'quantity' => $service['quantity'],
                 'service_id' => $service['service_id'],
-                'order_id' => $order['id']
+                'order_id' => $order['id'],
+                'type' =>$service['type']
             ]);
         }
+
+        return true;
     }
 }

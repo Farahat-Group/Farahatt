@@ -18,7 +18,7 @@ class CategoryResource extends JsonResource
             'id' => $this->id,
             'title' => $this->title,
             'description' => $this->description,
-            'image' => $this->image ?? "No Image",
+            'image' => $this->image ? url('images/categories/profile/' . $this->image) :  "No Image",
             'services' => count($this->services)
         ];
     }

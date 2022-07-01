@@ -3,6 +3,7 @@
 namespace App\Services\Cart;
 
 use App\Models\Cart;
+use App\Models\ExtraService;
 use App\Models\Service;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\Auth;
@@ -37,9 +38,21 @@ class CartServices
         $cash = 0;
         $cart = Cart::where('customer_id',Auth::user()->id)->first();
         foreach ($cart->services as $service){
-            $s =  Service::query()->where('id' , $service['service_id'])->first(['id' , 'price']);
-                $cash += $s['price'] * $service['quantity'];
+                $s =  Service::query()->where('id' , $service['service_id'])->first();
+                $cash += $s['priceAfterSale'];
         }
+
+        return $cash;
+    }
+
+    public static function getExtrasCash() {
+        $cash = 0;
+        $cart = Cart::where('customer_id',Auth::user()->id)->first();
+        foreach ($cart->extra_services() as $service){
+            $s =  ExtraService::query()->where('id' , $service['service_id'])->first();
+            $cash += $s['priceAfterSale'];
+        }
+
         return $cash;
     }
 

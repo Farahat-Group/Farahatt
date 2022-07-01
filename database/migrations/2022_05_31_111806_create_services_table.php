@@ -19,7 +19,7 @@ return new class extends Migration
             $table->text('description');
             $table->float('price');
             $table->float('sale')->default(0);
-            $table->json('images')->nullable();
+            $table->text('images')->nullable();
             $table->mediumInteger('sales')->default(0);
             $table->text('service_code');
             $table->foreignId('category_id')->constrained('categories')->onDelete('CASCADE')->onUpdate('CASCADE');

@@ -16,11 +16,12 @@ return new class extends Migration
         Schema::create('orders', function (Blueprint $table) {
             $table->id();
             $table->float('cash');
-            $table->enum('status' , ['in progress', 'accepted' , 'refused' , 'delivering' , 'delivered']);
+            $table->enum('status' , ['0', '1' , '2' , '3']);
             $table->tinyInteger('sale')->default(0);
             $table->float('final_cash');
-            $table->enum('payment_method' , ['cash' , 'vodafone_cash'])->default('cash');
+            $table->enum('payment_method' , [0 , 1])->default(0);
             $table->text('payment_code')->nullable();
+            $table->text('coupon')->nullable();
             $table->foreignId('customer_id')->constrained('customers')->onUpdate('cascade')->onDelete('cascade');
             $table->timestamps();
         });

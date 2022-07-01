@@ -15,6 +15,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 use Symfony\Component\HttpFoundation\Exception\JsonException;
+use Throwable;
 
 class AuthController extends Controller
 {
@@ -51,6 +52,17 @@ class AuthController extends Controller
        return $this->responseJson(200 ,'Profile Returned' , (new ProfileResource(Auth::user())));
     }
 
+    public function changePassword(Request $request){
+            if (\Hash::check( $request->old_password, Auth::user()->password)) {
+                Auth::user()->update(["password" => $request->new_password]);
+                $customer = Auth::user();
+                $customer->token = $customer->createToken('token')->accessToken;
+                return $this->responseJson(200 , "Changed Successfully", new CustomerResource($customer));
+            }else{
+                return $this->responseJsonFailed(422, 'user password is incorrect');
+            }
+    }
+
     public function updateProfile(UpdateProfileRequest $request) {
         try {
             $customer = Auth::user();
@@ -67,7 +79,7 @@ class AuthController extends Controller
                 $image = $request->file('image');
 
                 $new_name = time() . $image->getClientOriginalName();
-                $image->move(public_path('/images/employee/profile'), $new_name);
+                $image->move(public_path('/images/customer/profile'), $new_name);
                 $customer->update(['image' => $new_name]);
             }
             $customer->update($request->except($exception));

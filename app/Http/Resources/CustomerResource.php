@@ -14,6 +14,7 @@ class CustomerResource extends JsonResource
             'id' => $this->id,
             'name' => $this->name,
             'email' => $this->email,
+            'image' => $this->image ? url('images/customers/' . $this->images) : null,
             'token' => $this->token
         ];
 

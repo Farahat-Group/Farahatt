@@ -16,6 +16,7 @@ class ServicesController extends Controller
     use ApiTraits;
 
     private Collection $services;
+    
     public function index(): JsonResponse{
         $this->services = Service::filter();
         if (count($this->services) == 0)
@@ -40,6 +41,12 @@ class ServicesController extends Controller
 
     public function newServices(): JsonResponse{
         $this->services = Service::query()->latest()->get()->sortByDesc('id');
+        if (count($this->services) == 0)
+            return $this->responseJsonWithoutData(200 , 'No Services Found!');
+        return $this->responseJson(200 , 'Services Returned' , ServiceResource::collection($this->services));
+    }
+    public function topSales(): JsonResponse{
+        $this->services = Service::query()->orderBy('sale' , 'desc')->get();
         if (count($this->services) == 0)
             return $this->responseJsonWithoutData(200 , 'No Services Found!');
         return $this->responseJson(200 , 'Services Returned' , ServiceResource::collection($this->services));

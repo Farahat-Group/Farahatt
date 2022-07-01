@@ -16,7 +16,7 @@ return new class extends Migration
         Schema::create('orders_services', function (Blueprint $table) {
             $table->id();
             $table->smallInteger('quantity')->default('1');
-            $table->foreignId('service_id')->constrained('services');
+            $table->foreignId('service_id')->constrained('services')->onUpdate('cascade')->onDelete('cascade');
             $table->foreignId('order_id')->constrained('orders')->onUpdate('cascade')->onDelete('cascade');
             $table->timestamps();
         });

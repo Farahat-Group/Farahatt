@@ -3,11 +3,10 @@
 @section('title', 'Dashboard')
 
 @section('content_header')
-    <h1>Dashboard</h1>
+    <h1>Customers</h1>
 @stop
 
 @section('content')
-    <h2>Users</h2>
 
 
     <table class="table">
@@ -25,17 +24,19 @@
             <th scope="row">{{$customer['id']}}</th>
             <td>{{$customer['name']}}</td>
             <td>{{$customer['email']}}</td>
-            <td>Control</td>
+            <td>
+            <form action="{{ route('customer.delete', $customer['id']) }}" method='POST'>
+                @method('DELETE')
+                @csrf
+                <input type="submit" value="Delete" class="btn btn-bg btn-danger">
+
+            </form>
+        </td>
         </tr>
         @empty
-            No Users
+            No Customers Yet
         @endforelse
         </tbody>
     </table>
 @stop
 
-
-
-@section('js')
-    <script> console.log('Hi!'); </script>
-@stop

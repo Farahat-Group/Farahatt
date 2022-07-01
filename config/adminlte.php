@@ -226,98 +226,92 @@ return [
 
     'menu' => [
         // Navbar items:
-        [
-            'type'         => 'navbar-search',
-            'text'         => 'search',
-            'topnav_right' => true,
-        ],
-        [
-            'type'         => 'fullscreen-widget',
-            'topnav_right' => true,
-        ],
 
-        // Sidebar items:
-        [
-            'type' => 'sidebar-menu-search',
-            'text' => 'search',
-        ],
+
         [
             'text' => 'blog',
             'url'  => 'admin/blog',
             'can'  => 'manage-blog',
         ],
+
+
         [
-            'text'        => 'users',
-            'url'         => 'users',
-            'icon'        => 'far fa-fw fa-file',
-            'label'       => 4,
+            'text'        => 'Customers',
+            'url'         => 'customers',
+            'icon'        => '',
             'label_color' => 'success',
         ],
-        ['header' => 'account_settings'],
+
         [
-            'text' => 'profile',
-            'url'  => 'admin/settings',
-            'icon' => 'fas fa-fw fa-user',
+            'text'        => 'Categories',
+            'url'         => 'categories',
+            'icon'        => '',
+            'label_color' => 'success',
         ],
         [
-            'text' => 'change_password',
-            'url'  => 'admin/settings',
-            'icon' => 'fas fa-fw fa-lock',
+            'text'        => 'Services',
+            'url'         => 'services',
+            'icon'        => '',
+            'label_color' => 'success',
+        ],
+
+        [
+            'text'        => 'Ads',
+            'url'         => 'ads',
+            'icon'        => '',
+            'label_color' => 'success',
+        ],
+
+        [
+            'text'        => 'On Boarding',
+            'url'         => 'boarding',
+            'icon'        => '',
+            'label_color' => 'success',
         ],
         [
-            'text'    => 'multilevel',
-            'icon'    => 'fas fa-fw fa-share',
-            'submenu' => [
-                [
-                    'text' => 'level_one',
-                    'url'  => '#',
-                ],
-                [
-                    'text'    => 'level_one',
-                    'url'     => '#',
-                    'submenu' => [
-                        [
-                            'text' => 'level_two',
-                            'url'  => '#',
-                        ],
-                        [
-                            'text'    => 'level_two',
-                            'url'     => '#',
-                            'submenu' => [
-                                [
-                                    'text' => 'level_three',
-                                    'url'  => '#',
-                                ],
-                                [
-                                    'text' => 'level_three',
-                                    'url'  => '#',
-                                ],
-                            ],
-                        ],
-                    ],
-                ],
-                [
-                    'text' => 'level_one',
-                    'url'  => '#',
-                ],
-            ],
+            'text'        => 'Contact Us',
+            'url'         => 'contact-us',
+            'icon'        => '',
+            'label_color' => 'success',
         ],
-        ['header' => 'labels'],
+
         [
-            'text'       => 'important',
-            'icon_color' => 'red',
-            'url'        => '#',
+            'text'        => 'Extra Services',
+            'url'         => 'extra-services',
+            'icon'        => '',
+            'label_color' => 'success',
         ],
+
         [
-            'text'       => 'warning',
-            'icon_color' => 'yellow',
-            'url'        => '#',
+            'text'        => 'Notifications',
+            'url'         => 'notifications',
+            'icon'        => '',
+            'label_color' => 'success',
         ],
+
         [
-            'text'       => 'information',
-            'icon_color' => 'cyan',
-            'url'        => '#',
+            'text'        => 'Orders',
+            'url'         => 'orders',
+            'icon'        => '',
+            'label_color' => 'success',
         ],
+
+        [
+            'text'        => 'Coupons',
+            'url'         => 'coupon',
+            'icon'        => '',
+            'label_color' => 'success',
+        ],
+
+        [
+            'text'        => 'Policies',
+            'url'         => 'policy',
+            'icon'        => '',
+            'label_color' => 'success',
+        ],
+
+
+
     ],
 
     /*
